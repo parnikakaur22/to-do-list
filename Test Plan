@@ -1,0 +1,46 @@
+Test Plan of ToDoList App
+Author: Parnika Kaur
+
+1. Purpose of Product
+The purpose of this product is to allow the user to create a to do list of tasks. The features of this product consist of adding new task and deleting the tasks. 
+
+2. Scope of Testing
+The scope of this testing will cover back-end part of the product features. The back-end testing will be done using Python's standard library module called unittest. This module defines tests using a class-based approach.
+
+3. Workflow
+- What to test
+The test case will be testing the back-end add and delete features of this product.
+
+- How to test
+The testing will be done by a class of test case for each feature.
+
+4. Test Case
+Feature 1: Add New Task
+from graphene_django.utils.testing import GraphQLTestCase
+class AddToDoTestCase(GraphQLTestCase):
+    def test_add_mutation(self):
+        response = self.query(
+            '''
+            mutation AddToDoMutation($title: String!, $description: String!){
+                AddToDoMutation(title: $title, description : $description) {
+                    title
+                    description
+                }
+            }
+            ''',
+            op_name='AddToDoMutation',
+            variables={'title': 'Task 1', 'description': 'Task 1 description'}
+        )
+
+        # This validates the status code and if you get errors
+        self.assertResponseNoErrors(response)
+
+Feature 2: Delete Task
+from graphene_django.utils.testing import GraphQLTestCase
+from django.urls import reverse
+from rest_framework import status
+class DeleteToDoTestCase(GraphQLTestCase):
+    def test_valid_delete_player(self):
+        response = self.delete(
+                reverse('single_task', kwargs={'pk': self.pk}))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
